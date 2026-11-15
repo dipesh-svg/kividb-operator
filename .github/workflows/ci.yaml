@@ -91,6 +91,13 @@ jobs:
       - name: helm template (sanity render)
         run: helm template kividb-operator charts/kividb-operator > /dev/null
 
+      - name: helm template uses release-scoped manager roles
+        run: |
+          first="$(helm template first charts/kividb-operator)"
+          second="$(helm template second charts/kividb-operator)"
+          test "$(grep -c 'name: first-kividb-operator-manager-role' <<< "$first")" -eq 2
+          test "$(grep -c 'name: second-kividb-operator-manager-role' <<< "$second")" -eq 2
+
   # Native per-arch builds (no QEMU): amd64 on ubuntu-latest, arm64 on
   # ubuntu-24.04-arm. Mirrors the release workflow's model so CI catches
   # Dockerfile breakage on both arches without emulated builds.
