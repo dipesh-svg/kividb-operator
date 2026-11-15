@@ -19,6 +19,15 @@ restarts its master in place: its slots are unavailable while it does,
 and with persistence off its data is lost. Scale such a shard to one
 replica first, or upgrade in a maintenance window if persistence is off.
 
+### Upgrade notes
+
+- **The manager's Helm RBAC role is now release-scoped.** The chart names
+  it using the release's fullname (with a `-manager-role` suffix) instead
+  of the shared `kividb-operator-manager-role`. A Helm upgrade creates
+  the new role, updates that release's binding to point to it, and removes
+  the old role. Update any manually managed bindings that refer to the old
+  fixed name before upgrading.
+
 ### Added
 
 - **`status.usedBy` on `KividbConfig`, `KividbAclConfig`, and `KividbSnapshotConfig`.**
