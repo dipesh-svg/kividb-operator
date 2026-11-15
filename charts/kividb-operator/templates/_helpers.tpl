@@ -66,11 +66,11 @@ Name of the manager ServiceAccount to use.
 {{- end -}}
 
 {{/*
-Name of the manager ClusterRole (kept as a fixed, predictable name so it
-matches config/rbac/role.yaml exactly regardless of release name).
+Name of the manager ClusterRole (or Role when watchNamespace is set).
+Scope it to this Helm release so multiple installations can coexist.
 */}}
 {{- define "kividb-operator.clusterRoleName" -}}
-kividb-operator-manager-role
+{{- printf "%s-manager-role" (include "kividb-operator.fullname" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
